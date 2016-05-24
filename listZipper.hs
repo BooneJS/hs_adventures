@@ -35,6 +35,9 @@ forward :: Node a -> Node a
 forward x@(MkNode _ _ []) = x
 forward x = forward $ goRight x
 
+mapZipper :: (a -> a) -> Node a -> Node a
+mapZipper f xx@(MkNode a l r) = MkNode (f a) (map f l) (map f r)
+
 main :: IO ()
 main = do
   let a' = MkNode 5 [] []
@@ -59,5 +62,7 @@ main = do
   putStrLn "Rewind"
   let h' = rewind f'
   print h'
+  let h'' = mapZipper (+1) h'
+  print h''
   let aa' = MkNode "Blah" [] []
   print aa'
