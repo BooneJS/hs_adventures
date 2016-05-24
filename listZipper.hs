@@ -24,6 +24,17 @@ goLeft (MkNode n (l:ls) r) = MkNode l ls (n : r)
 insertRight :: a -> Node a -> Node a
 insertRight n (MkNode nn l r) = MkNode n l (nn : r)
 
+update :: a -> Node a -> Node a
+update x (MkNode _ l r) = MkNode x l r
+
+rewind :: Node a -> Node a
+rewind x@(MkNode _ [] _) = x
+rewind x = rewind $ goLeft x
+
+forward :: Node a -> Node a
+forward x@(MkNode _ _ []) = x
+forward x = forward $ goRight x
+
 main :: IO ()
 main = do
   let a' = MkNode 5 [] []
@@ -32,7 +43,9 @@ main = do
   print (isTail a')
   let b' = insertRight 2 a'
   print b'
-  let c' = insertRight 3 b'
+  let b'' = update 99 b'
+  print b''
+  let c' = insertRight 3 b''
   print c'
   let d' = goRight c'
   print d'
@@ -40,6 +53,11 @@ main = do
   print e'
   let f' = goLeft (goLeft e')
   print f'
-
+  putStrLn "Forward"
+  let g' = forward f'
+  print g'
+  putStrLn "Rewind"
+  let h' = rewind f'
+  print h'
   let aa' = MkNode "Blah" [] []
   print aa'
